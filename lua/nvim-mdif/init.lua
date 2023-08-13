@@ -1,5 +1,13 @@
 local pane = nil;
 
+local function get_current_line()
+  return vim.fn.getline('.')
+end
+
+local function set_current_line(text)
+  return vim.fn.setline('.', text)
+end
+
 local function is_window_closed(win)
   return not vim.api.nvim_win_is_valid(win)
 end
@@ -37,14 +45,10 @@ end
 local function toggle_window()
   local target_file = '~/.config/vimwiki/index.md'
 
-  log("toggle")
   if pane and not is_window_closed(pane) then
-    log("pane or open")
     close_window(pane)
     pane = nil
   else
-    log("not pane or closed")
-    print("is window closed")
     pane = window_for_file(target_file)
   end
 end
@@ -65,7 +69,7 @@ local function fix_link(window, target, format)
 end
 
 local function find_link_at_cursor(window, format)
-  local line = vim.fn.getline('.')
+  local line = get_current_line()
   local col = vim.fn.col('.')
 
   local start = col
@@ -88,8 +92,34 @@ local function follow_link()
   local window = vim.fn.win_getid()
   local target = find_link_at_cursor(window, "md")
 
-  print(target)
   vim.cmd('edit ' .. target)
+end
+
+local function get_todo_state(line)
+  local _, _, state = line:find('^%s*%-%s%[([xX%s])%]%s')
+
+  return state
+end
+
+local function toggle_state(state)
+  return not state:match("%s") and ' ' or 'x'
+end
+
+local function update_todo_state(line, state, new_state)
+  return line:gsub('%-%s%[' .. state .. '%]', '- [' .. new_state .. ']', 1)
+end
+
+
+local function toggle_todo()
+  local line = get_current_line()
+  local state = get_todo_state(line)
+
+  if state then
+    local new_state = toggle_state(state)
+    local new_content = update_todo_state(line, state, new_state)
+
+    set_current_line(new_content)
+  end
 end
 
 local function skey(mode, keys, func)
@@ -97,9 +127,9 @@ local function skey(mode, keys, func)
 end
 
 local function setup()
-  print("hola mundo, otro")
   skey('n', '<Leader>w', toggle_window)
   skey('n', '<Leader>r', ":Lazy reload nvim-mdif<CR>")
+  skey('n', '<Space>', toggle_todo)
   skey('n', 'gn', follow_link)
 end
 
