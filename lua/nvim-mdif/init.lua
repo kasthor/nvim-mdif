@@ -1,4 +1,5 @@
 local pane = nil;
+local links = {};
 
 local function get_current_line()
   return vim.fn.getline('.')
@@ -18,6 +19,14 @@ local function close_window(win)
   end
 end
 
+local function push_link(filename)
+  table.insert(links,filename)
+end
+
+local function peek_link()
+  return links[#links]
+end
+
 local function create_window()
   vim.cmd('vsp')
 
@@ -28,12 +37,15 @@ local function move_window(win)
   vim.cmd(win .. 'wincmd L')
 end
 
-local function window_for_file(filename)
-  local buf = vim.fn.bufadd(vim.fn.expand(filename))
-  local current_window = create_window()
+local function open_filename(filename)
+  local buf = vim.fn.bufadd(filename)
   vim.api.nvim_win_set_buf(0, buf)
+end
 
-  move_window(current_window);
+local function window_for_file(filename)
+  local current_window = create_window()
+  open_filename(filename)
+  move_window(current_window)
 
   return current_window
 end
@@ -43,13 +55,18 @@ local function log(message)
 end
 
 local function toggle_window()
-  local target_file = '~/.config/vimwiki/index.md'
+  local target_file = vim.fn.expand('~/.config/vimwiki/index.md')
 
+  vim.print(links)
   if pane and not is_window_closed(pane) then
     close_window(pane)
     pane = nil
   else
-    pane = window_for_file(target_file)
+    if not peek_link() then
+      push_link(target_file)
+    end
+
+    pane = window_for_file(peek_link())
   end
 end
 
@@ -92,7 +109,10 @@ local function follow_link()
   local window = vim.fn.win_getid()
   local target = find_link_at_cursor(window, "md")
 
-  vim.cmd('edit ' .. target)
+  if target then
+    open_filename(target)
+    push_link(target)
+  end
 end
 
 local function get_todo_state(line)
