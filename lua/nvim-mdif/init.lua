@@ -1,12 +1,20 @@
 local pane = nil;
 local links = {};
 
+local function get_current_window()
+  return vim.api.nvim_get_current_win()
+end
+
 local function get_current_line()
   return vim.fn.getline('.')
 end
 
 local function set_current_line(text)
   return vim.fn.setline('.', text)
+end
+
+local function is_pane(win)
+  return pane == get_current_window()
 end
 
 local function is_window_closed(win)
@@ -23,6 +31,10 @@ local function push_link(filename)
   table.insert(links,filename)
 end
 
+local function pop_link()
+  table.remove(links)
+end
+
 local function peek_link()
   return links[#links]
 end
@@ -30,7 +42,7 @@ end
 local function create_window()
   vim.cmd('vsp')
 
-  return vim.api.nvim_get_current_win()
+  return get_current_window() 
 end
 
 local function move_window(win)
@@ -115,6 +127,17 @@ local function follow_link()
   end
 end
 
+local function go_back()
+  if is_pane(get_current_window()) then
+
+    if #links > 0 then
+      pop_link()
+
+      open_filename(peek_link())
+    end
+  end
+end
+
 local function get_todo_state(line)
   local _, _, state = line:find('^%s*%-%s%[([xX%s])%]%s')
 
@@ -151,6 +174,7 @@ local function setup()
   skey('n', '<Leader>r', ":Lazy reload nvim-mdif<CR>")
   skey('n', '<Space>', toggle_todo)
   skey('n', 'gn', follow_link)
+  skey('n', 'gp', go_back)
 end
 
 
