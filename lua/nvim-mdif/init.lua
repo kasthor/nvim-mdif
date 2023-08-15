@@ -17,6 +17,10 @@ local function is_pane(win)
   return pane == get_current_window()
 end
 
+local function is_external_link(target)
+  return target:match('^https?://')
+end
+
 local function is_window_closed(win)
   return not vim.api.nvim_win_is_valid(win)
 end
@@ -94,7 +98,11 @@ local function get_file_relative_to_current_buffer(window, link, format)
 end
 
 local function fix_link(window, target, format)
-  return get_file_relative_to_current_buffer(window, target, format)
+  if is_external_link(target) then
+    return target
+  else
+    return get_file_relative_to_current_buffer(window, target, format)
+  end
 end
 
 local function find_link_at_cursor(window, format)
@@ -116,14 +124,30 @@ local function find_link_at_cursor(window, format)
   end
 end
 
+local function open_url(url)
+  local platform = io.popen('uname -s'):read("*l")
+
+  if platform == "Linux" then
+    os.execute("xdg-open " .. url)
+  elseif platform == "Darwin" then
+    os.execute("open " .. url)
+  elseif platform:match("^Windows") then
+    os.execute("start " .. url)
+  end
+end
+
 
 local function follow_link()
   local window = vim.fn.win_getid()
   local target = find_link_at_cursor(window, "md")
 
   if target then
-    open_filename(target)
-    push_link(target)
+    if is_external_link(target) then
+      open_url(target)
+    else 
+      open_filename(target)
+      push_link(target)
+    end
   end
 end
 
