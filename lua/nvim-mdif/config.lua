@@ -9,6 +9,12 @@ local function get_config_defaults()
       namespace = {
         default = "~/.config/notes"
       }
+    },
+    keymaps = {
+      toggle_window = "<Leader>ww",
+      toggle_todo = "<Space>",
+      follow_link = "gn",
+      navigate_back = "gp"
     }
   }
 end
