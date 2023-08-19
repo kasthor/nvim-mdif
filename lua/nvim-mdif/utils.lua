@@ -26,10 +26,23 @@ local function log(message)
   vim.api.nvim_out_write(message .. "\n")
 end
 
+local function deep_merge(t1, t2)
+  for k, v in pairs(t2) do
+    if type(v) == table and type(t1(k)) == table then
+      deep_merge(t1[k], v)
+    else
+      t1[k] = v
+    end
+  end
+
+  return t1
+end
+
 return {
   get_current_line = get_current_line,
   set_current_line = set_current_line,
   open_url = open_url,
   skey = skey,
+  deep_merge = deep_merge,
   log = log
 }
