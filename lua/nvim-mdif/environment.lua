@@ -14,12 +14,13 @@ local function clear_pane()
 end
 
 local function toggle_pane(file)
-  print("pane", pane)
   if is_pane_open() then
     window.close(pane)
     clear_pane()
+    return false
   else
     pane = window.open_file_in_new_window(file)
+    return true
   end
 end
 

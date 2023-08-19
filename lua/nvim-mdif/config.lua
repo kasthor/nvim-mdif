@@ -6,12 +6,16 @@ local function get_config_defaults()
     filesystem = {
       index = "Index",
       extension = "md",
+      diary_naming_format = '%Y-%m-%d',
+      diary_directory = 'diary',
       namespace = {
         default = "~/.config/notes"
       }
     },
     keymaps = {
       toggle_window = "<Leader>ww",
+      toggle_index = "<Leader>wi",
+      toggle_diary_today = "<Leader>wt",
       toggle_todo = "<Space>",
       follow_link = "gn",
       navigate_back = "gp"

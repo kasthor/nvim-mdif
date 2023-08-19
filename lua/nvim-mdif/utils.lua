@@ -38,11 +38,19 @@ local function deep_merge(t1, t2)
   return t1
 end
 
+local function touch(filename)
+  local f = io.open(filename, "a")
+  if f then
+    f:close()
+  end
+end
+
 return {
   get_current_line = get_current_line,
   set_current_line = set_current_line,
   open_url = open_url,
   skey = skey,
   deep_merge = deep_merge,
+  touch = touch,
   log = log
 }

@@ -3,16 +3,28 @@ local navigation = require('nvim-mdif.navigation')
 local filesystem = require('nvim-mdif.filesystem')
 
 
-local function toggle_window()
-  local target_file = filesystem.get_index()
-
-  if not navigation.has_links() or not navigation.peek_link() then
+local function toggle_window_with_target(target_file, force)
+  if force or not navigation.has_links() or not navigation.peek_link() then
     navigation.push_link(target_file)
   end
 
-  env.toggle_pane(navigation.peek_link())
+  return env.toggle_pane(navigation.peek_link())
+end
+
+local function toggle_window()
+  toggle_window_with_target(filesystem.get_index())
+end
+
+local function toggle_index()
+  toggle_window_with_target(filesystem.get_index(), true)
+end
+
+local function toggle_diary_today()
+  toggle_window_with_target(filesystem.get_diary(), true)
 end
 
 return {
-  toggle_window = toggle_window
+  toggle_window = toggle_window,
+  toggle_index = toggle_index,
+  toggle_diary_today = toggle_diary_today
 }
