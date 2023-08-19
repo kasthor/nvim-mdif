@@ -13,10 +13,18 @@ local function clear_pane()
   pane = nil
 end
 
-local function toggle_pane(file)
+local function set_active()
+  window.switch_to(pane)
+end
+
+local function toggle_pane(file, keep_open)
   if is_pane_open() then
-    window.close(pane)
-    clear_pane()
+    if keep_open then
+      window.open_file(file, pane)
+    else
+      window.close(pane)
+      clear_pane()
+    end
     return false
   else
     pane = window.open_file_in_new_window(file)
@@ -28,4 +36,5 @@ return {
   is_pane = is_pane,
   is_pane_open = is_pane_open,
   toggle_pane = toggle_pane,
+  set_active = set_active,
 }

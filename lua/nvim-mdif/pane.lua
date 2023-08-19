@@ -8,7 +8,7 @@ local function toggle_window_with_target(target_file, force)
     navigation.push_link(target_file)
   end
 
-  return env.toggle_pane(navigation.peek_link())
+  return env.toggle_pane(navigation.peek_link(), force)
 end
 
 local function toggle_window()
@@ -23,8 +23,14 @@ local function toggle_diary_today()
   toggle_window_with_target(filesystem.get_diary(), true)
 end
 
+local function toggle_diary(date_values)
+  toggle_window_with_target(filesystem.get_diary(date_values), true)
+end
+
 return {
   toggle_window = toggle_window,
   toggle_index = toggle_index,
-  toggle_diary_today = toggle_diary_today
+  toggle_diary_today = toggle_diary_today,
+  set_active = env.set_active,
+  toggle_diary = toggle_diary
 }

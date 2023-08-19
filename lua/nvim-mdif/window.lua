@@ -24,6 +24,10 @@ local function move(win)
   vim.cmd(win .. 'wincmd L')
 end
 
+local function switch_to(win)
+  vim.api.nvim_set_current_win(win)
+end
+
 local function open_file(filename, window)
   buffer.open(filename, window)
 
@@ -54,5 +58,6 @@ return {
   move = move,
   open_file = open_file,
   open_file_in_new_window = open_file_in_new_window,
+  switch_to = switch_to,
   dirname = dirname
 }
