@@ -19,6 +19,13 @@ local function get_config_defaults()
       toggle_todo = "<Space>",
       follow_link = "gn",
       navigate_back = "gp"
+    },
+    calendar = {
+      activate = true,
+      keymaps = {
+        open = '<CR>',
+        peek = 'p',
+      }
     }
   }
 end
