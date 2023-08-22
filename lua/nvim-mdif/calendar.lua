@@ -22,7 +22,7 @@ local function set_calendar_keymap()
 end
 
 local function is_calendar_installed()
-  return vim.fn.exists(":Calendar") == 1
+  return not vim.fn.exists(":Calendar") ~= 0
 end
 
 local function setup()
