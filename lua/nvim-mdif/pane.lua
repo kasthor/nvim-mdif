@@ -27,10 +27,15 @@ local function toggle_diary(date_values)
   toggle_window_with_target(filesystem.get_diary(date_values), true)
 end
 
+local function toggle_with(file)
+  toggle_window_with_target(file, true)
+end
+
 return {
   toggle_window = toggle_window,
   toggle_index = toggle_index,
   toggle_diary_today = toggle_diary_today,
+  toggle_with = toggle_with,
   set_active = env.set_active,
   toggle_diary = toggle_diary
 }

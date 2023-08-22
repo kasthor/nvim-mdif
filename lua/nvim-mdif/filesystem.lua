@@ -10,6 +10,10 @@ local function get_directory_name()
   return configuration['namespace'][get_namespace()]
 end
 
+local function get_full_path(file)
+  return vim.fn.expand(get_directory_name() .. '/' .. file)
+end
+
 local function get_extension()
   local configuration = config.get_config('filesystem')
   local extension = configuration['extension']
@@ -28,7 +32,7 @@ local function get_index_name()
 end
 
 local function get_index()
-  return vim.fn.expand(get_directory_name() .. '/' .. get_index_name())
+  return get_full_path(get_index_name())
 end
 
 local function get_diary_filename(date_values)
@@ -55,5 +59,7 @@ end
 
 return {
   get_index = get_index,
-  get_diary = get_diary
+  get_diary = get_diary,
+  get_directory_name = get_directory_name,
+  get_full_path = get_full_path,
 }

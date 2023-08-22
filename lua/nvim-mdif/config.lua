@@ -26,6 +26,12 @@ local function get_config_defaults()
         open = '<CR>',
         peek = 'p',
       }
+    },
+    telescope = {
+      keymaps = {
+        find = '<Leader>wf',
+        grep = '<Leader>wg'
+      }
     }
   }
 end
