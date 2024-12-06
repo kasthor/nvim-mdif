@@ -45,9 +45,27 @@ local function touch(filename)
   end
 end
 
+local function yesterday()
+  local today = os.time()
+  local secondsInADay = 24 * 60 * 60;
+  local yesterday = today - secondsInADay;
+
+  return os.date("*t", yesterday)
+end
+
+local function tomorrow()
+  local today = os.time()
+  local secondsInADay = 24 * 60 * 60;
+  local tomorrow = today + secondsInADay;
+
+  return os.date("*t", tomorrow)
+end
+
 return {
   get_current_line = get_current_line,
   set_current_line = set_current_line,
+  tomorrow = tomorrow,
+  yesterday = yesterday,
   open_url = open_url,
   skey = skey,
   deep_merge = deep_merge,

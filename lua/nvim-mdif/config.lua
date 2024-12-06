@@ -16,6 +16,8 @@ local function get_config_defaults()
       toggle_window = "<Leader>ww",
       toggle_index = "<Leader>wi",
       toggle_diary_today = "<Leader>wt",
+      toggle_diary_yesterday = "<Leader>wy",
+      toggle_diary_tomorrow = "<Leader>wT",
       toggle_todo = "<Space>",
       follow_link = "gn",
       navigate_back = "gp"

@@ -1,6 +1,7 @@
 local env = require('nvim-mdif.environment')
 local navigation = require('nvim-mdif.navigation')
 local filesystem = require('nvim-mdif.filesystem')
+local utils = require('nvim-mdif.utils')
 
 
 local function toggle_window_with_target(target_file, force)
@@ -19,6 +20,14 @@ local function toggle_index()
   toggle_window_with_target(filesystem.get_index(), true)
 end
 
+local function toggle_diary_yesterday()
+  toggle_window_with_target(filesystem.get_diary(utils.yesterday()), true)
+end
+
+local function toggle_diary_tomorrow()
+  toggle_window_with_target(filesystem.get_diary(utils.tomorrow()), true)
+end
+
 local function toggle_diary_today()
   toggle_window_with_target(filesystem.get_diary(), true)
 end
@@ -35,6 +44,8 @@ return {
   toggle_window = toggle_window,
   toggle_index = toggle_index,
   toggle_diary_today = toggle_diary_today,
+  toggle_diary_yesterday = toggle_diary_yesterday,
+  toggle_diary_tomorrow = toggle_diary_tomorrow,
   toggle_with = toggle_with,
   set_active = env.set_active,
   toggle_diary = toggle_diary
